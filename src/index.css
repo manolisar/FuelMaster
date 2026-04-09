@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme: Dark (default) ─────────────────────────────────────────────── */
+:root {
+  --surface:      #050a12;
+  --panel:        #080f1c;
+  --input-bg:     #0a1628;
+  --panel-hover:  #0f1f3d;
+  --stroke:       #2a4a6e;
+  --stroke-dim:   #1b3050;
+  --heading:      #ffffff;
+  --body:         #94a3b8;
+  --dim:          #475569;
+  --ghost:        #2a4a6e;
+  --trace:        #080f1c;
+
+  /* accent colours — bright neon for dark bg */
+  --accent-sonar:   #00e5ff;
+  --accent-ember:   #ff9100;
+  --accent-readout: #00ff9d;
+  --accent-sonar-border:   rgba(0, 229, 255, 0.50);
+  --accent-ember-border:   rgba(255, 145,   0, 0.50);
+  --accent-readout-border: rgba(0, 255, 157, 0.50);
+
+  --grid-line:    rgba(0, 229, 255, 0.03);
+  --glow-top:     #00e5ff;
+  --glow-opacity: 0.2;
+  --card-shadow:  0 0 0 1px rgba(0, 229, 255, 0.25), 0 0 32px rgba(0, 229, 255, 0.08);
+  --scan-color:   rgba(0, 229, 255, 0.015);
+}
+
+/* ── Theme: Light ──────────────────────────────────────────────────────── */
+html.theme-light {
+  --surface:      #a8bdd0;
+  --panel:        #eef4fa;
+  --input-bg:     #dce8f2;
+  --panel-hover:  #e4eff8;
+  --stroke:       #5878a0;
+  --stroke-dim:   #7898bc;
+  --heading:      #020c18;
+  --body:         #0e2a42;
+  --dim:          #2c5070;
+  --ghost:        #50728e;
+  --trace:        #d0deec;
+
+  /* accent colours — darker, saturated tones legible on light bg */
+  --accent-sonar:   #006e88;
+  --accent-ember:   #b85800;
+  --accent-readout: #007a48;
+  --accent-sonar-border:   rgba(0, 110, 136, 0.55);
+  --accent-ember-border:   rgba(184,  88,   0, 0.55);
+  --accent-readout-border: rgba(0, 122,  72, 0.55);
+
+  --grid-line:    rgba(2, 12, 24, 0.10);
+  --glow-top:     #005c78;
+  --glow-opacity: 0.14;
+  --card-shadow:  0 4px 16px rgba(2, 12, 24, 0.18), 0 1px 3px rgba(2, 12, 24, 0.12);
+  --scan-color:   transparent;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--surface);
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--body);
+    min-height: 100dvh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  #root { min-height: 100dvh; }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] { -moz-appearance: textfield; }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
+@layer utilities {
+  .scanlines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      var(--scan-color) 2px,
+      var(--scan-color) 4px
+    );
+    pointer-events: none;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .card-shadow { box-shadow: var(--card-shadow); }
+}
