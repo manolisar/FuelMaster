@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { FUEL_TYPES } from '../utils/conversion'
 
-function Field({ id, label, unit, value, onChange, onBlur, error, hint, showError, step, min, max, placeholder }) {
+function Field({ id, label, unit, value, onChange, onBlur, error, warning, hint, showError, step, min, max, placeholder }) {
+  const showWarning = showError && !error && !!warning
+
   return (
     <div className="flex flex-col gap-1">
       {/* Label row — fixed one-line layout */}
@@ -42,16 +44,17 @@ function Field({ id, label, unit, value, onChange, onBlur, error, hint, showErro
       <div className="min-h-[14px]">
         {showError && error
           ? <p className="text-[10px] font-mono text-ember animate-fade-in">{error}</p>
+          : showWarning
+          ? <p className="text-[10px] font-mono text-amber-300 animate-fade-in">{warning}</p>
           : hint
-          ? <p className="text-[10px] font-mono text-ghost">{hint}</p>
-          : null
-        }
+            ? <p className="text-[10px] font-mono text-ghost">{hint}</p>
+            : null}
       </div>
     </div>
   )
 }
 
-export default function InputForm({ values, onChange, errors }) {
+export default function InputForm({ values, onChange, errors, warnings }) {
   const [touched, setTouched] = useState({})
   const fuel = FUEL_TYPES[values.fuelType]
 
@@ -90,6 +93,7 @@ export default function InputForm({ values, onChange, errors }) {
           onChange={(v) => onChange('density15', v)}
           onBlur={() => touch('density15')}
           error={errors.density15}
+          warning={warnings.density15}
           showError={!!touched.density15}
           placeholder={fuel ? `${fuel.densityRange[0]}–${fuel.densityRange[1]}` : '000'}
           step="1"

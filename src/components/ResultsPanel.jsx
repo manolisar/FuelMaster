@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 function Readout({ label, value, unit, accentClass, large = false, copyable = false }) {
   const [copied, setCopied] = useState(false)
+  const [copyError, setCopyError] = useState(false)
 
   const accentMap = {
     sonar:   { varName: '--accent-sonar',   borderVar: '--accent-sonar-border' },
@@ -10,11 +11,23 @@ function Readout({ label, value, unit, accentClass, large = false, copyable = fa
   }
   const a = accentMap[accentClass] ?? accentMap.sonar
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value).then(() => {
+  const handleCopy = async () => {
+    if (!navigator.clipboard?.writeText) {
+      setCopyError(true)
+      setTimeout(() => setCopyError(false), 1500)
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopyError(false)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
-    })
+    } catch {
+      setCopied(false)
+      setCopyError(true)
+      setTimeout(() => setCopyError(false), 1500)
+    }
   }
 
   const color  = `var(${a.varName})`
@@ -31,7 +44,7 @@ function Readout({ label, value, unit, accentClass, large = false, copyable = fa
           title="Copy value"
           className="absolute top-2 right-2 text-[10px] font-mono text-dim hover:text-body transition-colors px-1.5 py-0.5 rounded border border-stroke hover:border-stroke-dim"
         >
-          {copied ? 'copied' : 'copy'}
+          {copied ? 'copied' : copyError ? 'failed' : 'copy'}
         </button>
       )}
 

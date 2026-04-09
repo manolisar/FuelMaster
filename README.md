@@ -1,16 +1,40 @@
-# React + Vite
+# FuelMaster
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FuelMaster is a small React calculator for converting marine fuel mass in metric tons into observed volume using a linearised ASTM D1250-style volume correction factor.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install dependencies and start the Vite dev server:
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Production
 
-## Expanding the ESLint configuration
+Create a production build with:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run build
+```
+
+The app is configured for GitHub Pages under `/FuelMaster/`, so the generated asset paths assume that repository name.
+
+## Quality Checks
+
+Run the available static checks with:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Calculator Inputs
+
+- Fuel type
+- Mass in metric tons
+- Density at 15 C in kg/m3
+- Observed bunkering temperature in C
+
+Fuel-specific density bands are treated as guidance, not hard validation failures.

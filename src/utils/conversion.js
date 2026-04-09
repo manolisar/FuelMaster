@@ -80,9 +80,8 @@ export function convertFuel({ mass, density15, tempObs, fuelType }) {
 /**
  * Validate inputs — density15 expected in kg/m³.
  */
-export function validateInputs({ mass, density15, tempObs, fuelType }) {
+export function validateInputs({ mass, density15, tempObs }) {
   const errors = {}
-  const fuel = FUEL_TYPES[fuelType]
 
   if (!mass || isNaN(mass) || mass <= 0) {
     errors.mass = 'Enter a positive mass value'
@@ -92,8 +91,6 @@ export function validateInputs({ mass, density15, tempObs, fuelType }) {
     errors.density15 = 'Enter a valid density'
   } else if (density15 < 600 || density15 > 1100) {
     errors.density15 = 'Density must be between 600 – 1100 kg/m³'
-  } else if (fuel && (density15 < fuel.densityRange[0] || density15 > fuel.densityRange[1])) {
-    errors.density15 = `Typical ${fuel.label}: ${fuel.densityRange[0]} – ${fuel.densityRange[1]} kg/m³`
   }
 
   if (tempObs === '' || tempObs === null || isNaN(tempObs)) {
@@ -103,4 +100,23 @@ export function validateInputs({ mass, density15, tempObs, fuelType }) {
   }
 
   return errors
+}
+
+export function getInputWarnings({ density15, fuelType }) {
+  const warnings = {}
+  const fuel = FUEL_TYPES[fuelType]
+
+  if (
+    fuel &&
+    density15 !== '' &&
+    density15 !== null &&
+    !isNaN(density15) &&
+    density15 >= 600 &&
+    density15 <= 1100 &&
+    (density15 < fuel.densityRange[0] || density15 > fuel.densityRange[1])
+  ) {
+    warnings.density15 = `Outside typical ${fuel.label} range: ${fuel.densityRange[0]} – ${fuel.densityRange[1]} kg/m³`
+  }
+
+  return warnings
 }

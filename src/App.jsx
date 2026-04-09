@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import FuelSelector from './components/FuelSelector'
 import InputForm from './components/InputForm'
 import ResultsPanel from './components/ResultsPanel'
-import { convertFuel, validateInputs } from './utils/conversion'
+import { convertFuel, getInputWarnings, validateInputs } from './utils/conversion'
 
 const INITIAL_VALUES = {
   fuelType: 'MGO',
@@ -11,9 +11,9 @@ const INITIAL_VALUES = {
   tempObs: '',
 }
 
-function AnchorIcon({ className }) {
+function AnchorIcon({ className, ...props }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <circle cx="12" cy="5" r="2" />
       <line x1="12" y1="7" x2="12" y2="19" />
       <path d="M5 12H2a10 10 0 0 0 20 0h-3" />
@@ -49,6 +49,7 @@ function MoonIcon({ className }) {
 export default function App() {
   const [isDark, setIsDark] = useState(true)
   const [values, setValues] = useState(INITIAL_VALUES)
+  const [resetCount, setResetCount] = useState(0)
 
   // Sync theme class onto <html> so CSS variables cascade everywhere (incl. body bg)
   useEffect(() => {
@@ -67,7 +68,10 @@ export default function App() {
     setValues((prev) => ({ ...prev, fuelType }))
   }, [])
 
-  const handleReset = () => setValues(INITIAL_VALUES)
+  const handleReset = () => {
+    setValues(INITIAL_VALUES)
+    setResetCount((count) => count + 1)
+  }
 
   const parsed = useMemo(() => ({
     mass:      parseFloat(values.mass),
@@ -77,6 +81,7 @@ export default function App() {
   }), [values])
 
   const errors = useMemo(() => validateInputs(parsed), [parsed])
+  const warnings = useMemo(() => getInputWarnings(parsed), [parsed])
 
   const isValid = Object.keys(errors).length === 0 &&
     values.mass !== '' && values.density15 !== '' && values.tempObs !== ''
@@ -143,7 +148,7 @@ export default function App() {
 
           <FuelSelector selected={values.fuelType} onChange={handleFuelChange} />
 
-          <InputForm values={values} onChange={handleChange} errors={errors} />
+          <InputForm key={resetCount} values={values} onChange={handleChange} errors={errors} warnings={warnings} />
 
           <ResultsPanel result={result} inputs={values} />
 
